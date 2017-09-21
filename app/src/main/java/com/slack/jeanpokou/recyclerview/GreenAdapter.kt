@@ -4,11 +4,12 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.TextView
 import org.jetbrains.anko.find
 
 
-class GreenAdapter ( private val numberItems:Int): RecyclerView.Adapter<GreenAdapter.NumberViewHolder>() {
+class GreenAdapter ( private val numberItems:Int,private var mOnClickListener : ListItemClickListener) : RecyclerView.Adapter<GreenAdapter.NumberViewHolder>() {
     /**
      * Called by RecyclerView to display the data at the specified position. This method
      * should update the contents of the [ViewHolder.itemView] to reflect the item at
@@ -68,14 +69,27 @@ class GreenAdapter ( private val numberItems:Int): RecyclerView.Adapter<GreenAda
         return  NumberViewHolder(view)
     }
 
+    interface ListItemClickListener {
+        fun onListItemClick (clickedItemIndex : Int)
 
-    inner class NumberViewHolder (itemView : View) :RecyclerView.ViewHolder (itemView){
+    }
+    inner class NumberViewHolder (itemView : View) :RecyclerView.ViewHolder (itemView) {
 
        private val listItemNumberView = itemView.find<TextView>(R.id.tv_item_number)
         fun bind(listIndex : Int) {
-            listItemNumberView.text = listIndex.toString()
+            with(listItemNumberView) {
+                text = listIndex.toString()
+                setOnClickListener {
+                   mOnClickListener.onListItemClick(listIndex)
+                }
+            }
         }
 
     }
 
+
 }
+
+
+
+
